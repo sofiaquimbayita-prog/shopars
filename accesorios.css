@@ -648,6 +648,8 @@ button {
 
     background: #111;
 
+    touch-action: none;
+
 }
 
 
@@ -671,6 +673,51 @@ button {
     transform: scale(1.06);
 
     filter: grayscale(0);
+
+}
+
+
+.product-image:hover img {
+
+    transform: none;
+
+}
+
+
+.accessory-lens {
+
+    position: absolute;
+
+    z-index: 4;
+
+    width: 150px;
+
+    height: 150px;
+
+    border: 1px solid rgba(255,255,255,.85);
+
+    border-radius: 50%;
+
+    background-repeat: no-repeat;
+
+    background-color: #050608;
+
+    box-shadow: 0 0 0 1px rgba(35,104,255,.35), 0 14px 35px rgba(0,0,0,.55);
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transform: translate(-50%, -50%);
+
+    transition: opacity .16s ease;
+
+}
+
+
+.accessory-lens.active {
+
+    opacity: 1;
 
 }
 
@@ -1116,6 +1163,15 @@ footer {
     .product-image {
 
         height: 280px;
+
+    }
+
+
+    .accessory-lens {
+
+        width: 112px;
+
+        height: 112px;
 
     }
 

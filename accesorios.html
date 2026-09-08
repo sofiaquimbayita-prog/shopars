@@ -739,6 +739,163 @@
 </footer>
 
 
+<script>
+
+    const accessoryLensZoom = 2.75;
+
+    document.querySelectorAll(".product-image").forEach(
+        (productImage) => {
+
+            const product = productImage.querySelector("img");
+            const lens = document.createElement("div");
+
+            lens.className = "accessory-lens";
+
+            lens.setAttribute("aria-hidden", "true");
+
+            lens.style.backgroundImage =
+                "url(\"" + product.getAttribute("src") + "\")";
+
+            productImage.appendChild(lens);
+
+            let touchZoomActive = false;
+
+
+            function updateLens(event) {
+
+                const imageRect =
+                    product.getBoundingClientRect();
+
+                const containerRect =
+                    productImage.getBoundingClientRect();
+
+                const naturalRatio =
+                    product.naturalWidth / product.naturalHeight;
+
+                if (!naturalRatio) {
+
+                    return;
+
+                }
+
+                const scale = Math.max(
+                    imageRect.width / product.naturalWidth,
+                    imageRect.height / product.naturalHeight
+                );
+
+                const renderedWidth =
+                    product.naturalWidth * scale;
+
+                const renderedHeight =
+                    product.naturalHeight * scale;
+
+                const renderedLeft =
+                    (imageRect.width - renderedWidth) / 2;
+
+                const renderedTop =
+                    (imageRect.height - renderedHeight) / 2;
+
+                const x =
+                    event.clientX - imageRect.left - renderedLeft;
+
+                const y =
+                    event.clientY - imageRect.top - renderedTop;
+
+                const lensRadius = lens.offsetWidth / 2;
+
+                lens.style.left =
+                    event.clientX - containerRect.left + "px";
+
+                lens.style.top =
+                    event.clientY - containerRect.top + "px";
+
+                lens.style.backgroundSize =
+                    renderedWidth * accessoryLensZoom + "px " +
+                    renderedHeight * accessoryLensZoom + "px";
+
+                lens.style.backgroundPosition =
+                    (lensRadius - x * accessoryLensZoom) + "px " +
+                    (lensRadius - y * accessoryLensZoom) + "px";
+
+                lens.classList.add("active");
+
+            }
+
+
+            function hideLens() {
+
+                if (!touchZoomActive) {
+
+                    lens.classList.remove("active");
+
+                }
+
+            }
+
+
+            productImage.addEventListener(
+                "pointermove",
+                updateLens
+            );
+
+            productImage.addEventListener(
+                "pointerenter",
+                (event) => {
+
+                    if (event.pointerType !== "touch") {
+
+                        updateLens(event);
+
+                    }
+
+                }
+            );
+
+            productImage.addEventListener(
+                "pointerleave",
+                hideLens
+            );
+
+            productImage.addEventListener(
+                "pointerdown",
+                (event) => {
+
+                    if (event.pointerType === "touch") {
+
+                        touchZoomActive = true;
+
+                        productImage.setPointerCapture(event.pointerId);
+
+                        updateLens(event);
+
+                    }
+
+                }
+            );
+
+            productImage.addEventListener(
+                "pointerup",
+                (event) => {
+
+                    if (event.pointerType === "touch") {
+
+                        touchZoomActive = false;
+
+                        productImage.releasePointerCapture(event.pointerId);
+
+                        lens.classList.remove("active");
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
 <script src="idioma.js"></script>
 
 </body>
